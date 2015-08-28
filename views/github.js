@@ -16,23 +16,18 @@
 
 'use strict';
 
-// Load .env and ENV
-require('dotenv').load({silent: true});
+module.exports.path = '/github/webhook/';
+var options = {path: module.exports.path, secret: process.env.GITHUB_WEBHOOK_SECRET || 'secret'};
+var handler = module.exports.handler = require('github-webhook-handler')(options);
 
-// app
-var express = require('express');
-var app = express();
-
-app.get('/', function (req, res) {
-  res.send('github-trello sync tool from Tickle. '+
-    '<a href="https://github.com/tickleapp/ghtrello">https://github.com/tickleapp/ghtrello</a>');
+handler.on('error', function (err) {
+  console.error('Github Webhook Error:', err.message);
 });
 
-// routers
-var githubView = require('./views/github');
-app.post(githubView.path, githubView.handler);
-var trelloRouter = require('./views/trello');
-app.use('/trello', trelloRouter);
+handler.on('issue', function(event) {
+});
 
-// Listen
-app.listen(process.env.port || 5000);
+handler.on('issue_comment', function(event) {
+    if (event.payload.action === 'created') {
+    }
+});

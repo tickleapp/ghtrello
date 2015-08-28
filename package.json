@@ -17,9 +17,12 @@
     "node": "0.12.x"
   },
   "dependencies": {
+    "body-parser": "^1.13.3",
     "chai": "^3.2.0",
     "dotenv": "^1.2.0",
     "express": "^4.13.3",
+    "github-webhook-handler": "^0.5.0",
+    "mocha": "^2.2.5",
     "sync-request": "^2.0.1",
     "yargs": "^3.21.0"
   },
@@ -29,7 +32,6 @@
   },
   "devDependencies": {
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
     "nodemon": "^1.4.1"
   }
 }
