@@ -17,6 +17,7 @@
     "node": "0.12.x"
   },
   "dependencies": {
+    "dotenv": "^1.2.0",
     "express": "^4.13.3"
   },
   "scripts": {

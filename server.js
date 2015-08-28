@@ -14,6 +14,9 @@
  *  limitations under the License.
 */
 
+// Load .env and ENV
+require('dotenv').load({silent: true});
+
 var express = require('express');
 var app = express();
 
