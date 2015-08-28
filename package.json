@@ -1,0 +1,28 @@
+{
+  "name": "ghtrello",
+  "version": "0.0.1",
+  "description": "github-trello sync tool for Tickle app",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tickleapp/ghtrello.git"
+  },
+  "author": "sodas@tickleapp.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/tickleapp/ghtrello/issues"
+  },
+  "homepage": "https://github.com/tickleapp/ghtrello",
+  "engines": {
+    "node": "0.12.x"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.4.1"
+  }
+}
