@@ -14,6 +14,8 @@
  *  limitations under the License.
 */
 
+'use strict';
+
 // Load .env and ENV
 require('dotenv').load({silent: true});
 
