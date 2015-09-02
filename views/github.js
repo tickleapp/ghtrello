@@ -45,6 +45,10 @@ handler.on('issue_comment', basicListener);
 // == Event handlers ===================================================================================================
 
 function handleIssueLabels(githubIssue, trelloCard) {
+    if (githubIssue.state !== 'open' || trelloCard.closed) {
+        return;
+    }
+
     // labels: resolved
     var body, successMessage, errorMessage;
     if (typeof _.find(githubIssue.labels, 'name', 'resolved') !== 'undefined') {
@@ -112,9 +116,13 @@ handler.on('issues', function(event) {
                 if (trelloSuccess) {
                     console.log('Trello card created. (' + trelloResult.shortUrl + ')');
                     // Write back to GitHub
-                    GitHubModels.requestGitHubAPI('PATCH', payload.issue.url, {}, {
-                        body: payload.issue.body + '\n' +
-                            GitHubModels.Issue.trello_card_id_ref_link_text + '(' + trelloResult.shortUrl + ')'
+                    GitHubModels.requestGitHubAPI({
+                        method: 'PATCH',
+                        url: payload.issue.url,
+                        body: {
+                            body: payload.issue.body + '\n' +
+                                GitHubModels.Issue.trello_card_id_ref_link_text + '(' + trelloResult.shortUrl + ')'
+                        }
                     }, function(githubSuccess, githubResult) {
                         if (githubSuccess) {
                             console.log('Success to update GitHub issue with Trello Card ID');
