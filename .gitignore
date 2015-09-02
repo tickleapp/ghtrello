@@ -30,4 +30,5 @@ typings
 
 .env
 .idea
+*.paw
 
