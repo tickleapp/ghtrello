@@ -17,11 +17,12 @@
 
 'use strict';
 
+require('dotenv').load({silent: true});
+
 var printJSONRequest = require('./helpers').printJSONRequest, requestUrl = require('./models/trello').requestUrl;
 
-// Load ENV and arguments ----------------------------------------------------------------------------------------------
+// Load arguments ------------------------------------------------------------------------------------------------------
 
-require('dotenv').load({silent: true});
 var argv = require('yargs')
     .usage('$0 action [...arguments of actions]')
     .demand(1)

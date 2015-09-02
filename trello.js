@@ -17,10 +17,10 @@
 
 'use strict';
 
+require('dotenv').load({silent: true});
 var syncRequest = require('sync-request'), requestUrl = require('./models/trello').requestUrl, _ = require('lodash');
 
-// Load ENV and arguments ----------------------------------------------------------------------------------------------
-require('dotenv').load({silent: true});
+// Load arguments ------------------------------------------------------------------------------------------------------
 var argv = require('yargs')
     .usage('$0 action [...arguments of actions]')
     .demand(1)

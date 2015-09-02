@@ -16,7 +16,8 @@
 
 'use strict';
 
-var _ = require('lodash'), util = require('util'), path = require('path'), request = require('request');
+var _ = require('lodash'), util = require('util'), path = require('path');
+var request = require('request'), syncRequest = require('sync-request');
 
 
 module.exports.requestUrl = function(requestPath, args, include_token) {
@@ -37,8 +38,8 @@ module.exports.requestUrl = function(requestPath, args, include_token) {
             .value().join('&');
 };
 
-module.exports.requestTrelloAPI = function(options, callback) {
-    request(_.merge(options, {
+function mergeRequestOptions(options) {
+    return _.merge({
         body: {
             key: process.env.TRELLO_KEY,
             token: process.env.TRELLO_TOKEN
@@ -48,7 +49,11 @@ module.exports.requestTrelloAPI = function(options, callback) {
             'User-Agent': 'Tickle\'s GitHub Trello Sync Tool'
         },
         json: true
-    }), function(error, response, body) {
+    }, options);
+}
+
+module.exports.requestTrelloAPI = function(options, callback) {
+    request(mergeRequestOptions(options), function(error, response, body) {
         if (typeof callback === 'undefined') {
             return;
         } else if (error) {
@@ -63,6 +68,22 @@ module.exports.requestTrelloAPI = function(options, callback) {
             callback(false, body);
         }
     });
+};
+
+module.exports.syncRequestTrelloAPI = function(options) {
+    options = mergeRequestOptions(options);
+
+    var method = options.method || 'GET';
+    var url = options.url;
+    delete options.method;
+    delete options.url;
+    delete options.json;
+
+    if (options.body) {
+        options.body = JSON.stringify(options.body);
+    }
+
+    return syncRequest(method, url, options);
 };
 
 
