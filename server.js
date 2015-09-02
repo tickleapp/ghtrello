@@ -35,4 +35,4 @@ app.post(githubView.path, githubView.handler);
 // app.use('/trello', trelloRouter);
 
 // Listen
-app.listen(process.env.port || 5000);
+app.listen(process.env.PORT || 5000);
