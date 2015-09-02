@@ -16,23 +16,17 @@
 
 'use strict';
 
-// Load .env and ENV
-require('dotenv').load({silent: true});
+var syncRequest = require('sync-request');
 
-// app
-var express = require('express');
-var app = express();
+module.exports.printJSONRequest = function(method, url) {
+    try {
+        console.log(JSON.parse(syncRequest(method, url).getBody().toString()));
+    } catch (error) {
+        console.error(error.message);
+    }
+};
 
-app.get('/', function (req, res) {
-    res.send('github-trello sync tool from Tickle. '+
-        '<a href="https://github.com/tickleapp/ghtrello">https://github.com/tickleapp/ghtrello</a>');
-});
-
-// routers
-var githubView = require('./views/github');
-app.post(githubView.path, githubView.handler);
-// var trelloRouter = require('./views/trello');
-// app.use('/trello', trelloRouter);
-
-// Listen
-app.listen(process.env.port || 5000);
+module.exports.escapeRegExp = function(str) {
+    // Ref: http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+};

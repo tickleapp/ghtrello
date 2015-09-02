@@ -22,16 +22,21 @@
     "dotenv": "^1.2.0",
     "express": "^4.13.3",
     "github-webhook-handler": "^0.5.0",
+    "lodash": "^3.10.1",
     "mocha": "^2.2.5",
+    "request": "^2.61.0",
     "sync-request": "^2.0.1",
     "yargs": "^3.21.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "test": "mocha"
+    "start": "node --harmony --use_strict --harmony_generators server.js",
+    "test": "mocha --harmony --harmony-generators"
   },
   "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-nodemon": "^2.0.4",
     "jshint": "^2.8.0",
-    "nodemon": "^1.4.1"
+    "jshint-stylish": "^2.0.1"
   }
 }

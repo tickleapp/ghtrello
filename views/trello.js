@@ -16,14 +16,15 @@
 
 'use strict';
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var crypto = require('crypto');
-
+var express = require('express'), bodyParser = require('body-parser'), crypto = require('crypto');
+var EventEmitter = require('events').EventEmitter, _ = require('lodash');
+var models = require('./../models/trello');
 
 var router = module.exports = express.Router();
 
-// Verify content signature and parse json
+
+// == Signaure verifier ================================================================================================
+
 router.use(bodyParser.raw({type: 'application/json'}));
 router.use(function(request, response, next) {
     function base64Digest(s) {
@@ -33,15 +34,49 @@ router.use(function(request, response, next) {
     var doubleHash = base64Digest(base64Digest(content));
     var headerHash = base64Digest(request.headers['x-trello-webhook']);
 
+    console.log(_.repeat('-', 79));
+    console.log(new Date());
+
     if (doubleHash === headerHash) {
-        request.body = JSON.parse(request.body.toString());
-        next();
+        try {
+            request.body = JSON.parse(request.body.toString());
+            next();
+        } catch (e) {
+            console.error('Bad JSON body');
+            response.status(400).json({error: 'Bad JSON body'});
+        }
     } else {
-        response.status(400).send('Bad signature');
+        console.error('Bad signature');
+        response.status(400).json({error: 'Bad signature'});
     }
 });
 
-// Go
+
+// == Dispatcher =======================================================================================================
+
+var handler = new EventEmitter();
+
 router.post('/webhook/', function(req, res) {
-    res.send('ok');
+    var payload = new models.Payload(req.body);
+    var emitData = {
+        actionType: payload.action.type,
+        payload: payload,
+        protocol: req.protocol,
+        host: req.headers.host,
+        url: req.url
+    };
+
+    console.log('Received Trello Event: %s %s', payload.action.type, payload.model.url);
+
+    handler.emit(payload.action.type, emitData);
+    handler.emit('*', emitData);
+    // done
+    res.json({'ok': true});
+});
+
+
+// == Handler ==========================================================================================================
+
+handler.on('createCard', function(event) {
+    console.log(event.payload.action.type);
 });

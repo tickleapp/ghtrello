@@ -16,23 +16,17 @@
 
 'use strict';
 
-// Load .env and ENV
-require('dotenv').load({silent: true});
+var gulp = require('gulp'), jshint = require('gulp-jshint'), nodemon = require('gulp-nodemon');
 
-// app
-var express = require('express');
-var app = express();
-
-app.get('/', function (req, res) {
-    res.send('github-trello sync tool from Tickle. '+
-        '<a href="https://github.com/tickleapp/ghtrello">https://github.com/tickleapp/ghtrello</a>');
+gulp.task('jshint', function() {
+    gulp.src(['**/*.js', '!node_modules/**/*.js']).pipe(jshint()).pipe(jshint.reporter('jshint-stylish'));
 });
 
-// routers
-var githubView = require('./views/github');
-app.post(githubView.path, githubView.handler);
-// var trelloRouter = require('./views/trello');
-// app.use('/trello', trelloRouter);
-
-// Listen
-app.listen(process.env.port || 5000);
+gulp.task('devserver', function() {
+    nodemon({
+        env: {NODE_ENV: 'development'},
+        execMap: {
+            js: 'node --harmony --use_strict --harmony_generators'
+        }
+    });
+});
